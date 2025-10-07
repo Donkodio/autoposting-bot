@@ -1,1 +1,22 @@
+# System
+.DS_Store
+__pycache__/
+*.pyc
+
+# Python venv
+.venv/
+env/
+
+# Project secrets / configs
+config.json
 credentials.json
+prices.json
+templates.json
+templates_second_group.json
+flavor_emojis.json
+message_db.json
+
+# Logs & cache
+*.log
+*.sqlite
+*.db
