@@ -1,0 +1,106 @@
+{
+  "ELF BAR/1500": {
+    "reason": "manual",
+    "file": "elfbar1500.jpg"
+  },
+  "ELF BAR/1500 ultra": {
+    "reason": "manual",
+    "file": "elfbar1500ultra.jpg"
+  },
+  "ELF BAR/2000": {
+    "reason": "manual",
+    "file": "elfbar2000.jpg"
+  },
+  "ELF BAR/BC 10000 Touch": {
+    "reason": "auto",
+    "file": "elfbarbc10000touch.jpg"
+  },
+  "ELF BAR/BC 15000": {
+    "reason": "manual",
+    "file": "elfbarbc15000.jpg"
+  },
+  "ELF BAR/COMBO PRO 30000": {
+    "reason": "auto",
+    "file": "elfbarcombox25000.jpg"
+  },
+  "ELF BAR/COMBO x 25000": {
+    "reason": "manual",
+    "file": "elfbarcombox25000.jpg"
+  },
+  "ELF BAR/FS 18000": {
+    "reason": "manual",
+    "file": "elfbarfs18000.jpg"
+  },
+  "ELF BAR/GH 23000": {
+    "reason": "manual",
+    "file": "elfbargh23000.jpg"
+  },
+  "ELF BAR/GH 33000 PRO": {
+    "reason": "auto",
+    "file": "elfbargh23000.jpg"
+  },
+  "ELF BAR/ICE KING 30000": {
+    "reason": "manual",
+    "file": "elfbariceking30000.jpg"
+  },
+  "ELF BAR/MoonNight 40000": {
+    "reason": "manual",
+    "file": "elfbarmoonnight40000.jpg"
+  },
+  "ELF BAR/Nic King": {
+    "reason": "manual",
+    "file": "elfbarnicking.jpg"
+  },
+  "ELF BAR/Pi7000": {
+    "reason": "auto",
+    "file": "elfbarnicking.jpg"
+  },
+  "ELF BAR/Planet 25000": {
+    "reason": "manual",
+    "file": "elfbarplanet25000.jpg"
+  },
+  "ELF BAR/Raya D3 25000": {
+    "reason": "manual",
+    "file": "elfbarrayad325000.jpg"
+  },
+  "ELF BAR/Ri 3000": {
+    "reason": "auto",
+    "file": "elfbariceking30000.jpg"
+  },
+  "ELF BAR/Sour King": {
+    "reason": "manual",
+    "file": "elfbarsourking.jpg"
+  },
+  "ELF BAR/Sweet King": {
+    "reason": "manual",
+    "file": "elfbarsweetking.jpg"
+  },
+  "LOST MARY/MO 5000": {
+    "reason": "manual",
+    "file": "lostmarymo5000.jpg"
+  },
+  "VOZOL/RAVE 40000": {
+    "reason": "auto",
+    "file": "vozolvista20000.jpg"
+  },
+  "VOZOL/RAVE 50000": {
+    "reason": "auto",
+    "file": "vozolvista20000.jpg"
+  },
+  "VOZOL/STAR 40000": {
+    "reason": "auto",
+    "file": "vozolstar9000.jpg"
+  },
+  "WAKA/SOPRO 10000 EN 7% / 9%": {
+    "reason": "auto",
+    "file": "wakawakapa250007%9%.jpg"
+  },
+  "WAKA/WAKA 36000": {
+    "reason": "auto",
+    "file": "wakawakapa250007%9%.jpg"
+  },
+  "WAKA/WAKA PA 25000 7% / 9%": {
+    "reason": "manual",
+    "file": "wakawakapa250007%9%.jpg"
+  }
+}

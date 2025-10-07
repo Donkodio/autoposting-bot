@@ -1,0 +1,6 @@
+aiogram>=3.7
+python-telegram-bot>=13.0        # если используешь этот пакет в каком-то коде
+gspread
+oauth2client
+rapidfuzz
+schedule

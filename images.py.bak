@@ -1,0 +1,129 @@
+# images.py
+import os
+import logging
+import re
+from typing import Optional, Dict
+from rapidfuzz import process, fuzz
+
+log = logging.getLogger("autopost.images")
+
+IMAGE_EXTS = (".jpg", ".jpeg", ".png", ".webp", ".gif")
+
+
+def normalize_for_image(text: str) -> str:
+    if not text:
+        return ""
+    t = re.sub(r'[^0-9A-Za-zА-Яа-я]+', ' ', text)
+    t = t.replace('/', ' ')
+    t = t.strip().lower()
+    t = re.sub(r'\s+', '', t)
+    return t
+
+
+class ImageIndex:
+    """
+    ImageIndex умеет сканировать папку, строить индекс normalized_key -> filename
+    и автоматически подбирать best match с помощью rapidfuzz.
+    """
+
+    def __init__(self, image_folder: str = "images", map_file: str = "image_map.json"):
+        self.image_folder = image_folder
+        self.map_file = map_file
+        self.index: Dict[str, str] = {}
+        self._built = False
+
+    def build(self, manual_overrides: dict = None):
+        """Сканирует image_folder и загружает manual overrides (если переданы)."""
+        self.index = {}
+        if not os.path.isdir(self.image_folder):
+            log.warning("IMAGE_FOLDER '%s' не найден", self.image_folder)
+            self._built = True
+            return
+
+        for fn in os.listdir(self.image_folder):
+            if not fn.lower().endswith(IMAGE_EXTS):
+                continue
+            name = os.path.splitext(fn)[0]
+            key = normalize_for_image(name)
+            if key and key not in self.index:
+                self.index[key] = fn
+
+        # apply manual overrides if provided
+        if manual_overrides:
+            for mk, v in manual_overrides.items():
+                if isinstance(v, str) and v.strip():
+                    self.index[mk] = v
+
+        log.info("IMAGE_INDEX built: %d entries", len(self.index))
+        self._built = True
+
+    def save_map(self, path: Optional[str] = None):
+        """Просто экспортирует текущую map (можно править вручную позже)."""
+        import json
+        path = path or self.map_file
+        try:
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(self.index, f, ensure_ascii=False, indent=2)
+            log.info("image_map.json сохранён (%d entries)", len(self.index))
+        except Exception:
+            log.exception("Не удалось сохранить image_map.json")
+
+    def load_manual_map(self, path: Optional[str] = None) -> dict:
+        """Попытка загрузить ручной маппинг из file (если существует)."""
+        import json
+        path = path or self.map_file
+        if not os.path.exists(path):
+            return {}
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            # normalize keys
+            return {str(k): str(v) for k, v in data.items()}
+        except Exception:
+            log.exception("Ошибка при чтении %s", path)
+            return {}
+
+    def find_best(self, model_name: str, score_threshold: int = 55) -> Optional[str]:
+        """Возвращает filename (без папки) или None."""
+        if not self._built:
+            # try to load manual too
+            manual = self.load_manual_map()
+            self.build(manual_overrides=manual)
+
+        key = normalize_for_image(model_name)
+        if key in self.index:
+            log.info("Image: direct match for '%s' -> %s", model_name, self.index[key])
+            return self.index[key]
+
+        choices = list(self.index.keys())
+        if not choices:
+            return None
+
+        best = process.extractOne(model_name, choices, scorer=fuzz.token_set_ratio)
+        if not best:
+            return None
+        match_key, score, _ = best
+        log.info("Image: fuzzy match for '%s' -> '%s' (score=%s)", model_name, match_key, score)
+        if score >= score_threshold:
+            return self.index.get(match_key)
+        return None
+
+    def get_image_path(self, model_name: str) -> str:
+        """Возвращает полный локальный путь к файлу, или placeholder URL если не найден."""
+        # try exact normalized filenames
+        norm = normalize_for_image(model_name)
+        for ext in IMAGE_EXTS:
+            p = os.path.join(self.image_folder, norm + ext)
+            if os.path.isfile(p):
+                log.info("Image: exact file exists for '%s' -> %s", model_name, p)
+                return p
+
+        fn = self.find_best(model_name)
+        if fn:
+            p = os.path.join(self.image_folder, fn)
+            if os.path.isfile(p):
+                log.info("Image: found by index for '%s' -> %s", model_name, p)
+                return p
+
+        log.warning("Image for '%s' not found, returning placeholder", model_name)
+        return "https://via.placeholder.com/900x900.png?text=No+Image"
